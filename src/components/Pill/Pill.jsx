@@ -1,4 +1,5 @@
 import React from 'react'
+import '../Pill/Pill.css'
 
 function Pill({image, text, onClick}) {
   return (

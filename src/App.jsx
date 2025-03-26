@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
-import Pill from './components/Pill';
+import Pill from './components/Pill/Pill';
 
 function App() {
   const[searchTerm, setSearchTerm] = useState("");
   // const[users, setUsers] = useState([])
   const[suggestions, setSuggestions] = useState([]);
   const[selectedUsers , setSelectedUsers] = useState([])
-  const[selectedUserSet , setSelectedUserSet] = useState(new Set())
+  const[selectedUserSet , setSelectedUserSet] = useState(new Set());
+  const[activeSuggestion, setActiveSuggestion] = useState(0)
 
   const inputRef = useRef(null)
 
 
   const fetchUsers= ()=>{
+    setActiveSuggestion(0)
     if(searchTerm.trim()===""){
       return setSuggestions([])
     }
@@ -53,6 +54,24 @@ function App() {
       handleRemoveUser(lastUser)
       setSuggestions("")
     }
+    else if (e.key ==="ArrowDown" && suggestions?.users?.length >0){
+      e.preventDefault();
+      setActiveSuggestion((prevIndex)=>
+        prevIndex < suggestions.users.length - 1 ? 
+        prevIndex + 1 : prevIndex
+      );
+    }
+    else if(e.key==="ArrowUp" && suggestions?.users.length > 0){
+      e.preventDefault();
+      setActiveSuggestion((prevIndex)=> (prevIndex >0 ? prevIndex -1: 0))
+    }
+    else if(e.key==="Enter" &&
+      activeSuggestion >= 0 &&
+      activeSuggestion < suggestions.users.length
+    ){
+      handleSelectUser(suggestions.users[activeSuggestion])
+
+    }
   }
 
 
@@ -71,7 +90,7 @@ function App() {
 
 
       {/* search input */}
-      <div className='searchTerm'>
+      <div>
         <input 
         ref={inputRef}
         type="text"
@@ -81,10 +100,12 @@ function App() {
         onKeyDown={handleKeyDown}
         />
        
-        <ul className='suggestion-list'>
+        <ul className='suggestions-list'>
           {suggestions?.users?.map((user,index)=>{
             return !selectedUserSet.has(user.email)?(
-                <li key={user.email} onClick={()=>handleSelectUser(user)}>
+                <li
+                className={index === activeSuggestion ? "active":""}
+                 key={user.email} onClick={()=>handleSelectUser(user)}>
                   <img src={user.image}
                    alt={`${user.firstName}
                     ${user.lastName} `} 
