@@ -1,0 +1,29 @@
+/* .border{
+  display: flex;
+  flex-direction: column;
+} */
+.searchInput{
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+ align-items: center;
+ justify-content: start;
+  width: 90vw;
+  min-height: 80px;
+  max-height: 300px;
+  border: 1px solid white;
+  overflow-y: scroll;
+}
+.searchInput input{
+  background-color: #fff;
+  width: 90%;
+  border-radius: 25px;
+  color: black;
+  outline: none;
+  border: none;
+  padding: 0px 20px;
+  font-size: 20px;
+}
+.searchInput input:focus{
+  outline: none;
+}
